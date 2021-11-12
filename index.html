@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>The impossible list</title>
 </head>
 <body>
@@ -18,8 +19,8 @@
             <div class="list" v-for="cat in lists">
                 <h3 v-text='cat.name' ></h3>
                 <div class="items" v-for="item in cat.data" :style="{'display':'flex'}">
-                    <input @click="check(item.id)" type="checkbox" value="off">
-                    <p v-text="item.name"></p>
+                    <input @click="check(item.id,)" type="checkbox"  >
+                    <p v-text="item.name" :class='{done:item.status}' ></p>
                 </div>
             </div>
         </div>
@@ -37,9 +38,21 @@
                     user: data.users[0],
                 }
             },
+            computed: {
+                status () {
+                    
+                }
+            }
+            ,
             methods: {
-                check (){
-                    console.log(this.index)
+                check (id, value){
+                    this.lists.forEach(cat => {
+                        cat.data.forEach(list => {
+                            if (list.id == id){
+                                list.status = !list.status
+                            }
+                        })
+                    });
                 }
             }
         }
