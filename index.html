@@ -8,11 +8,17 @@
 </head>
 <body>
     <div id="app">
-        <h1>welcome to the impossible list </h1>
+        <nav>
+            <span v-text='user.name'></span>
+        </nav>
+
+        <h1 @click="check()" >welcome to the impossible list </h1>
+        
         <div>
             <div class="list" v-for="cat in lists">
-                <h3 v-text='cat.name'></h3>
-                <div class="items" v-for="item in cat.data">
+                <h3 v-text='cat.name' ></h3>
+                <div class="items" v-for="item in cat.data" :style="{'display':'flex'}">
+                    <input @click="check(item.id)" type="checkbox" value="off">
                     <p v-text="item.name"></p>
                 </div>
             </div>
@@ -29,7 +35,11 @@
                 return {
                     lists: data.catagories,
                     user: data.users[0],
-                    test: "aha "
+                }
+            },
+            methods: {
+                check (){
+                    console.log(this.index)
                 }
             }
         }
