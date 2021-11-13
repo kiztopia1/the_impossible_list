@@ -10,19 +10,20 @@
 <body>
     <div id="app">
         <nav>
-            <span v-text='user.name'></span>
+            <span v-text='user.userName'></span>
         </nav>
 
         <h1 @click="check()" >welcome to the impossible list </h1>
         
         <div>
-            <div class="list" v-for="cat in lists">
+            <div v-if="loading" class="list" v-for="cat in lists">
                 <h3 v-text='cat.name' ></h3>
                 <div class="items" v-for="item in cat.data" :style="{'display':'flex'}">
                     <input @click="check(item.id,)" type="checkbox"  >
                     <p v-text="item.name" :class='{done:item.status}' ></p>
                 </div>
             </div>
+            <div v-else @click="sort()"><p>loading...</p> </div>
         </div>
     </div>
     <script src="./vue.global.js"></script>
@@ -34,9 +35,10 @@
         const ImpossibleApp = {
             data (){
                 return {
-                    lists: data.catagories,
-                    user: data.users[0],
-                }
+                    user: db[0],
+                    loading:false,
+                    lists: []
+                };
             },
             computed: {
                 status () {
@@ -53,6 +55,9 @@
                             }
                         })
                     });
+                },
+                sort (){
+                    console.log("")
                 }
             }
         }
