@@ -17,14 +17,14 @@ var db = [
                     catagories: 'work',
                     sub_tasks:[]
                 },{
-                    id:1,
+                    id:3,
                     name:'build my app yene boss',
                     status: false,
                     catagories: 'self',
                     sub_tasks:[]
                 },
                 {
-                    id:2,
+                    id:4,
                     name:'learn vue and bild amazing apps with it',
                     status: false,
                     catagories: 'work',

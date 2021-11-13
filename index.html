@@ -14,17 +14,16 @@
         </nav>
 
         <h1 @click="check()" >welcome to the impossible list </h1>
-        <div v-for="task in tasks"></div>
-        <div>
-            <div v-if="loading" class="list" v-for="cat in lists">
-                <h3 v-text='cat.name' ></h3>
-                <div class="items" v-for="item in cat.data" :style="{'display':'flex'}">
-                    <input @click="check(item.id,)" type="checkbox"  >
-                    <p v-text="item.name" :class='{done:item.status}' ></p>
+            <template v-if="!loading" >
+                <div class="list" v-for="cat in tasks">
+                    <h3 v-text='cat.name' ></h3>
+                    <div class="items" v-for="task in cat.tasks" :style="{'display':'flex'}">
+                        <input @click="check(task.id,)" type="checkbox"  >
+                        <p v-text="task.name" :class='{done:task.status}' ></p>
+                    </div>
                 </div>
-            </div>
-            <div v-else @click="sort()"><p>loading...</p> </div>
-        </div>
+            </template>
+        <div v-else @click="sort()"><p>loading...</p> </div>
     </div>
     <script src="./lib/vue.global.js"></script>
     <script src="./data.js"></script>
@@ -36,12 +35,13 @@
             data (){
                 return {
                     user: db[0],
-                    loading:false,
-                    lists: []
+                    loading:true,
+                    lists: [],
+                    tasks:[]
                 };
             },
             computed: {
-                tasks () {
+                comp_tasks () {
                     const data = []
                     let cat = []
                     this.user.tasks.forEach(task => {
@@ -59,24 +59,42 @@
                         }
 
                     })
-                    this.loading=false
+                    this.loading = false
                     return data
                 }
             }
             ,
             methods: {
                 check (id, value){
-                    this.lists.forEach(cat => {
-                        cat.data.forEach(list => {
-                            if (list.id == id){
-                                list.status = !list.status
-                            }
-                        })
-                    });
+                    let task = this.user.tasks.filter(task => task.id == id )[0]
+                    task.status = !task.status;
                 },
                 sort (){
-                    console.log("")
+                    const data = []
+                    let cat = []
+                    this.user.tasks.forEach(task => {
+                        
+                        if(cat.indexOf(task.catagories) == -1 ){
+                            cat.push(task.catagories)
+                            data.push({'name':task.catagories, 'tasks':[task]})
+
+                        }else{
+                            data.filter(function(elem){
+                                if (elem.name == task.catagories){
+                                    elem.tasks.push(task)
+                                }
+                            })
+                        }
+
+                    })
+                    this.loading = false
+                    
+                    this.tasks= data
+                    console.log(this.tasks,'haha')
                 }
+            },
+            created() {
+                this.sort()
             }
         }
 
