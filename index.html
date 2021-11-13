@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/lib//pure-min.css">
     <title>The impossible list</title>
 </head>
 <body>
@@ -14,15 +15,24 @@
         </nav>
 
         <h1 @click="check()" >welcome to the impossible list </h1>
-            <template v-if="!loading" >
-                <div class="list" v-for="cat in tasks">
-                    <h3 v-text='cat.name' ></h3>
-                    <div class="items" v-for="task in cat.tasks" :style="{'display':'flex'}">
-                        <input @click="check(task.id,)" type="checkbox"  >
-                        <p v-text="task.name" :class='{done:task.status}' ></p>
-                    </div>
+
+        <form action="" class="pure-form" @submit.prevent="addTask(new_task_name, new_task_cat)">
+            <label for="name">Name</label>
+            <input v-model='new_task_name' type="text" name="name" id="name">
+            <label for="cat">catagories</label>
+            <input v-model='new_task_cat' type="text" name="cat" id="cat">
+            <button >add</button>
+        </form>
+
+        <template v-if="!loading" >
+            <div class="list" v-for="cat in tasks">
+                <h3 v-text='cat.name' ></h3>
+                <div class="items" v-for="task in cat.tasks" :style="{'display':'flex'}">
+                    <input @click="check(task.id,)" type="checkbox"  >
+                    <p v-text="task.name" :class='{done:task.status}' ></p>
                 </div>
-            </template>
+            </div>
+        </template>
         <div v-else @click="sort()"><p>loading...</p> </div>
     </div>
     <script src="./lib/vue.global.js"></script>
@@ -36,8 +46,9 @@
                 return {
                     user: db[0],
                     loading:true,
-                    lists: [],
-                    tasks:[]
+                    tasks:[],
+                    new_task_name:'',
+                    new_task_cat:'',
                 };
             },
             computed: {
@@ -68,6 +79,16 @@
                 check (id, value){
                     let task = this.user.tasks.filter(task => task.id == id )[0]
                     task.status = !task.status;
+                },
+                addTask (name, cat){
+                    this.user.tasks.push({
+                        id:100,
+                        name:name,
+                        status: false,
+                        catagories: cat,
+                        sub_tasks:[]
+                    });
+                    this.sort()
                 },
                 sort (){
                     const data = []
